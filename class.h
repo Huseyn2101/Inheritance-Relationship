@@ -37,7 +37,7 @@ public:
 			throw "Stack is Empty";
 
 		for (int i = _top; i >= 0; --i)
-			cout << _container[i].display() << " ";
+			static_cast<T>(_container[i]).display();
 		cout << endl;
 	}
 
@@ -79,22 +79,18 @@ public:
 	Engine() : _engineNo(generateEngineNumber()), _company("Default Company"), _volume((rand() % 40 + 10) / 10.0f) {}
 	Engine(string engineNo, string company, float volume) : _engineNo(engineNo), _company(company), _volume(volume) {}
 	Engine(string company, float volume) : _engineNo(generateEngineNumber()), _company(company), _volume(volume) {}
+	Engine(string engineNo, string company) : _engineNo(engineNo), _company(company), _volume((rand() % 40 + 10) / 10.0f) {}
 
-	string display() const {
-		return "Engine Number: " + getEngineNo() + "\nCompany: " + getCompany() + "\nVolume: " + to_string(_volume);
-	}
 
 	string getEngineNo() const { return _engineNo; }
 	string getCompany() const { return _company; }
 	float getVolume() const { return _volume; }
 
-	/*void display() {
-		cout << "\v~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
-		cout << "\vEngine number: " << _engineNo << endl;
-		cout << "Company: " << _company << endl;
-		cout << "Volume: " << _volume << endl;
-		cout << "\v~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
-	}*/
+	virtual void display() {
+		cout << "\vEngine number: " << getEngineNo() << endl;
+		cout << "Company: " << getCompany() << endl;
+		cout << "Volume: " << getVolume() << endl;
+	}
 
 };
 
@@ -123,22 +119,17 @@ public:
 		: _id(generateID()), _model(model), _vendor(vendor), _engine() {
 	}
 
-	string display() const {
-		return "\n\b~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nID: "
-			+ to_string(getID()) + "\nModel: " + getModel() + "\nVendor: " + getVendor() + "\n" + _engine.display();
-	}
-
 	string getModel() const { return _model; }
 	string getVendor() const { return _vendor; }
 	size_t getID() const { return _id; }
 
-	/*void display() {
-		Engine::display();
+	void display() override {
 		cout << "\v~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
-		cout << "\vID: " << _id << endl;
+		Engine::display();
+		cout << "ID: " << _id << endl;
 		cout << "Model: " << _model << endl;
 		cout << "Vendor: " << _vendor << endl;
-	}*/
+	}
 
 };
 
@@ -159,18 +150,13 @@ public:
 		: Transportation(model, vendor, company, volume), _hasSpoiler(hasSpoiler) {
 	}
 
-
-	string display() const {
-		return Transportation::display() + "\nHas spoiler: " + (getHasSpoiler() ? "Yes" : "No") + '\v';
-	}
-
 	bool getHasSpoiler() const { return _hasSpoiler; }
 
-	/*void display() {
+	void display() override {
 		Transportation::display();
-		cout << "\v~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
 		cout << "Has spoiler: " << (_hasSpoiler ? "Yes" : "No") << endl;
-	}*/
+		cout << "\v~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+	}
 
 
 };
@@ -194,16 +180,11 @@ public:
 		: Transportation(model, vendor, company, volume), _hasSail(hasSail) {
 	}
 
-
-	string display() const {
-		return Transportation::display() + "\nHas sail: " + (getHasSail() ? "Yes" : "No") + '\v';
-	}
-
-	/*void display() {
+	void display() override {
 		Transportation::display();
-		cout << "\v~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
 		cout << "Has sail: " << (_hasSail ? "Yes" : "No") << endl;
-	}*/
+		cout << "\v~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+	}
 
 	bool getHasSail() const { return _hasSail; }
 
@@ -215,11 +196,11 @@ private:
 	int _passengerCapacity;
 
 	int generateEngineCount() {
-		return rand() % 4 + 1; // Random engine count between 1 and 4
+		return rand() % 4 + 1;
 	}
 
 	int generatePassengerCapacity() {
-		return rand() % 200 + 50; // Random passenger capacity between 50 and 250
+		return rand() % 200 + 50;
 	}
 
 public:
@@ -235,17 +216,12 @@ public:
 		: Transportation(model, vendor, company, volume), _engineCount(engineCount), _passengerCapacity(passengerCapacity) {
 	}
 
-
-	string display() const {
-		return Transportation::display() + "\nEngine Count: " + to_string(getEngineCount()) + "\nPassenger Capacity: " + to_string(getPassengerCapacity()) + '\v';
-	}
-
-	/*void display() {
+	void display() override {
 		Transportation::display();
+		cout << "Engine count: " << getEngineCount() << endl;
+		cout << "Passenger capacity: " << getPassengerCapacity() << endl;
 		cout << "\v~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
-		cout << "Engine count: " << _engineCount << endl;
-		cout << "Passenger capacity: " << _passengerCapacity << endl;
-	}*/
+	}
 
 	int getEngineCount() const { return _engineCount; }
 
@@ -254,7 +230,7 @@ public:
 };
 
 
-class TransPortDepo : public Stack<Car>, public Stack<Ship>, public Stack<Airplane> {
+class TransPortDepo {
 private:
 	Stack<Car> _carStack;
 	Stack<Ship> _shipStack;

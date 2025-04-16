@@ -43,14 +43,6 @@ int main()
 	}
 
 
-
-
-	// Display all vehicles
-
-	/*depo.displayCars();
-	depo.displayShips();
-	depo.displayAirplanes();*/
-
 	cout << "All vehicles in the depot: \v" << endl;
 	depo.showAll();
 
